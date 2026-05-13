@@ -439,4 +439,9 @@ def substitutos(iid: int, atual=Depends(get_atual)):
             SELECT i.id,i.nome FROM integrantes i
             JOIN funcoes_integrante fi ON fi.integrante_id=i.id
             WHERE fi.nome=%s AND i.id!=%s AND i.igreja_id=%s
-        """, (f, iid, atual["igrej
+        """, (f, iid, atual["igreja_id"]))
+        result.append({"funcao":f,"substitutos":[dict(r) for r in cur.fetchall()]})
+    cur.close(); conn.close(); return result
+
+@app.get("/health")
+def health(): return {"status":"ok"}
